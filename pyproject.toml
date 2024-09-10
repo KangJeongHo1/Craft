@@ -17,6 +17,7 @@ asyncpg = "^0.29.0"
 python-dotenv = "^1.0.1"
 greenlet = "^3.0.3"
 pydentic = "^0.0.1.dev3"
+matplotlib = "^3.9.2"
 
 
 [tool.poetry.group.dev.dependencies]
