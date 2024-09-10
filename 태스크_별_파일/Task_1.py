@@ -70,15 +70,17 @@ def calculate_cancellations(b601f_row, a301f_data):
     total_trade_volume = [0] * 5
     cancellation_volume = [0] * 5
 
-    # Initialize the total trade volumes for each level
+    used_a301f_rows = set()  # 이미 사용된 A301F 행을 추적 (튜플로 변환)
+
     for i in range(5):
         if ask_prices[i] > bid_prices[i]:  # 하락장
             for a301f_row in a301f_data:
                 price = a301f_row[1]
                 volume = a301f_row[2]
 
-                if price == bid_prices[i]:  # 체결가가 매수 가격과 동일
+                if price == bid_prices[i] and tuple(a301f_row) not in used_a301f_rows:  # 체결가가 매수 가격과 동일
                     total_trade_volume[i] += volume
+                    used_a301f_rows.add(tuple(a301f_row))  # 튜플로 변환하여 추가
 
             cancellation_volume[i] = ask_volumes[i] - total_trade_volume[i]
 
@@ -87,8 +89,9 @@ def calculate_cancellations(b601f_row, a301f_data):
                 price = a301f_row[1]
                 volume = a301f_row[2]
 
-                if price == ask_prices[i]:  # 체결가가 매도 가격과 동일
+                if price == ask_prices[i] and tuple(a301f_row) not in used_a301f_rows:  # 체결가가 매도 가격과 동일
                     total_trade_volume[i] += volume
+                    used_a301f_rows.add(tuple(a301f_row))  # 튜플로 변환하여 추가
 
             cancellation_volume[i] = bid_volumes[i] - total_trade_volume[i]
 
